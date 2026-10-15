@@ -5,7 +5,9 @@
 
 from __future__ import annotations
 
+import json
 import logging
+from pathlib import Path
 from typing import Any
 
 import torch
@@ -35,7 +37,14 @@ class Alpamayo15Model(AlpamayoBaseModel):
 
     @classmethod
     def _variant_init_kwargs(cls, model_cfg: ModelConfig) -> dict[str, Any]:
-        return {"cfg_guidance_weight": model_cfg.cfg_guidance_weight}
+        kwargs: dict[str, Any] = {"cfg_guidance_weight": model_cfg.cfg_guidance_weight}
+        if model_cfg.sharding:
+            if model_cfg.model_type != "alpamayo1_5":
+                raise ValueError(
+                    "Sharding is supported only for the Alpamayo 1.5 adapter"
+                )
+            kwargs["sharding"] = True
+        return kwargs
 
     def __init__(
         self,
@@ -53,12 +62,13 @@ class Alpamayo15Model(AlpamayoBaseModel):
         ),
         max_num_distance_points: int = 64,
         skip_first_n_distance_points: int = 0,
+        sharding: bool = False,
     ):
         """Initialize Alpamayo 1.5 model.
 
         Args:
             checkpoint_path: Path or HuggingFace model ID for Alpamayo 1.5 checkpoint.
-            device: Torch device for inference.
+            device: Torch device for inference; local cuda:0 when sharding.
             camera_ids: List of camera IDs (supports multiple cameras).
             context_length: Number of temporal frames per camera (default 4).
             num_traj_samples: Number of trajectory samples to generate.
@@ -77,17 +87,52 @@ class Alpamayo15Model(AlpamayoBaseModel):
                 average.
             skip_first_n_distance_points: Leading waypoints excluded from the
                 selection distance average.
+            sharding: Use the bundled coordinated map across two visible GPUs.
+                Each GPU has a 12 GiB resident weight-and-buffer budget;
+                activations and caches require additional memory.
         """
+        if sharding:
+            if device.type != "cuda" or device.index not in (None, 0):
+                raise ValueError("Sharding requires input device cuda:0")
+            if torch.cuda.device_count() != 2:
+                raise ValueError("Sharding requires exactly two visible CUDA GPUs")
+            if device.index is None and torch.cuda.current_device() != 0:
+                raise ValueError("Sharding requires input device cuda:0")
         if force_determinism:
             configure_deterministic_runtime()
         logger.info("Loading Alpamayo 1.5 checkpoint from %s", checkpoint_path)
         logger.info("Using Alpamayo 1.5 attn_implementation=%s", _ATTN_IMPLEMENTATION)
 
+        placement = {}
+        if sharding:
+            placement = {
+                "device_map": json.loads(
+                    Path(__file__).with_name("alpamayo1_5_device_map.json").read_text()
+                ),
+                "max_memory": {0: "12GiB", 1: "12GiB"},
+            }
         model = Alpamayo1_5.from_pretrained(
             checkpoint_path,
             dtype=self.DTYPE,
             attn_implementation=_ATTN_IMPLEMENTATION,
-        ).to(device)
+            **placement,
+        )
+        if sharding:
+            for gpu in (0, 1):
+                weight_bytes = sum(
+                    tensor.numel() * tensor.element_size()
+                    for tensor in list(model.parameters()) + list(model.buffers())
+                    if tensor.device == torch.device(f"cuda:{gpu}")
+                )
+                logger.info(
+                    "Shard %s resident weights and buffers: %.3f GiB",
+                    gpu,
+                    weight_bytes / 2**30,
+                )
+                if weight_bytes > 12 * 2**30:
+                    raise RuntimeError(f"Shard {gpu} exceeds the 12 GiB weight budget")
+        else:
+            model = model.to(device)
         processor = helper.get_processor(model.tokenizer)
 
         self._cfg_guidance_weight = cfg_guidance_weight

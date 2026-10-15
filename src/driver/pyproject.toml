@@ -13,6 +13,7 @@ dependencies = [
   "vam",
   "alpamayo_r1",
   "alpamayo1_5",
+  "accelerate>=1.12.0",
   "einops",
   "numpy",
   "opencv-python-headless",

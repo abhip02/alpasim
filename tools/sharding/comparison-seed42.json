@@ -1,0 +1,147 @@
+{
+  "session_seeds": {
+    "regular": [
+      42
+    ],
+    "sharded": [
+      42
+    ]
+  },
+  "record_counts": {
+    "regular": {
+      "rollout_metadata": 1,
+      "available_cameras_request": 1,
+      "available_cameras_return": 1,
+      "driver_session_request": 1,
+      "traffic_session_request": 1,
+      "physics_request": 9,
+      "physics_return": 9,
+      "actor_poses": 27,
+      "available_ego_masks_request": 1,
+      "available_ego_masks_return": 1,
+      "batch_render_request": 26,
+      "driver_camera_image": 104,
+      "driver_ego_trajectory": 25,
+      "route_request": 25,
+      "controller_request": 25,
+      "controller_return": 25,
+      "driver_request": 8,
+      "driver_return": 8
+    },
+    "sharded": {
+      "rollout_metadata": 1,
+      "available_cameras_request": 1,
+      "available_cameras_return": 1,
+      "driver_session_request": 1,
+      "traffic_session_request": 1,
+      "physics_request": 9,
+      "physics_return": 9,
+      "actor_poses": 27,
+      "available_ego_masks_request": 1,
+      "available_ego_masks_return": 1,
+      "batch_render_request": 26,
+      "driver_camera_image": 104,
+      "driver_ego_trajectory": 25,
+      "route_request": 25,
+      "controller_request": 25,
+      "controller_return": 25,
+      "driver_request": 8,
+      "driver_return": 8
+    }
+  },
+  "first_call_observations_and_request_identical": true,
+  "policy_calls": [
+    {
+      "index": 0,
+      "trajectory_points": 65,
+      "trajectory_proto_identical": true,
+      "max_position_difference_m": 0.0,
+      "mean_position_difference_m": 0.0,
+      "reasoning_identical": true,
+      "regular_reasoning": "Keep distance to the lead vehicle since it is stopped ahead",
+      "sharded_reasoning": "Keep distance to the lead vehicle since it is stopped ahead"
+    },
+    {
+      "index": 1,
+      "trajectory_points": 65,
+      "trajectory_proto_identical": true,
+      "max_position_difference_m": 0.0,
+      "mean_position_difference_m": 0.0,
+      "reasoning_identical": true,
+      "regular_reasoning": "Keep distance to the lead vehicle since it is stopped ahead",
+      "sharded_reasoning": "Keep distance to the lead vehicle since it is stopped ahead"
+    },
+    {
+      "index": 2,
+      "trajectory_points": 65,
+      "trajectory_proto_identical": true,
+      "max_position_difference_m": 0.0,
+      "mean_position_difference_m": 0.0,
+      "reasoning_identical": true,
+      "regular_reasoning": "Keep distance to the lead vehicle since it is stopped ahead in our lane",
+      "sharded_reasoning": "Keep distance to the lead vehicle since it is stopped ahead in our lane"
+    },
+    {
+      "index": 3,
+      "trajectory_points": 65,
+      "trajectory_proto_identical": true,
+      "max_position_difference_m": 0.0,
+      "mean_position_difference_m": 0.0,
+      "reasoning_identical": true,
+      "regular_reasoning": "Keep distance to the lead vehicle since it is stopped ahead",
+      "sharded_reasoning": "Keep distance to the lead vehicle since it is stopped ahead"
+    },
+    {
+      "index": 4,
+      "trajectory_points": 65,
+      "trajectory_proto_identical": true,
+      "max_position_difference_m": 0.0,
+      "mean_position_difference_m": 0.0,
+      "reasoning_identical": true,
+      "regular_reasoning": "Keep distance to the cut-in vehicle since it merges into our lane ahead",
+      "sharded_reasoning": "Keep distance to the cut-in vehicle since it merges into our lane ahead"
+    },
+    {
+      "index": 5,
+      "trajectory_points": 65,
+      "trajectory_proto_identical": true,
+      "max_position_difference_m": 0.0,
+      "mean_position_difference_m": 0.0,
+      "reasoning_identical": true,
+      "regular_reasoning": "Keep lane since the lane is clear ahead",
+      "sharded_reasoning": "Keep lane since the lane is clear ahead"
+    },
+    {
+      "index": 6,
+      "trajectory_points": 65,
+      "trajectory_proto_identical": true,
+      "max_position_difference_m": 0.0,
+      "mean_position_difference_m": 0.0,
+      "reasoning_identical": true,
+      "regular_reasoning": "Keep distance to the cut-in vehicle since it merges into our lane ahead",
+      "sharded_reasoning": "Keep distance to the cut-in vehicle since it merges into our lane ahead"
+    },
+    {
+      "index": 7,
+      "trajectory_points": 65,
+      "trajectory_proto_identical": true,
+      "max_position_difference_m": 0.0,
+      "mean_position_difference_m": 0.0,
+      "reasoning_identical": true,
+      "regular_reasoning": "Keep lane since the lane is clear ahead",
+      "sharded_reasoning": "Keep lane since the lane is clear ahead"
+    }
+  ],
+  "closed_loop_ego": {
+    "pose_count": 27,
+    "poses_proto_identical": true,
+    "max_position_difference_m": 0.0,
+    "final_position_difference_m": 0.0
+  },
+  "aggregate_metric_values_identical_excluding_run_identifiers": true,
+  "source_comparison_sha256": "b6423dd95879545e36aedea831c53a7d47d947eaa8274a63613ab44352fafc6a",
+  "raw_asl_sha256": {
+    "regular": "e0dd030bfcb1ea03207962ad1c49ac7442f46b2fdbaf81169d91d6a2f28c8d48",
+    "sharded": "481ab8526c0865195e73bce0883c1314c7df2d94a9cbbd84acf167c5f30b08d5"
+  }
+}

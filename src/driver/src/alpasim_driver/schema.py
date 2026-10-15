@@ -47,6 +47,8 @@ class ModelConfig:
     # fields, which costs a second forward pass (~60 GB VRAM) and needs an
     # instruction to blend towards.
     cfg_guidance_weight: float | None = None
+    # Alpamayo 1.5 only: use the bundled coordinated two-GPU placement.
+    sharding: bool = False
     force_determinism: bool = False  # Alpamayo models only
     num_trajectory_samples: int = 1  # Alpamayo models only
     # Where camera JPEGs are decoded.  ``cuda`` leaves the frames on the

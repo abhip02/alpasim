@@ -1,0 +1,10 @@
+# Coordinated model placement within one driver container.
+# Expose exactly two GPUs to that container; see docs/ALPAMAYO_SHARDING.md.
+defaults:
+  - alpamayo1_5
+  - _self_
+
+model:
+  device: cuda:0
+  sharding: true
+  image_decode_device: cpu
